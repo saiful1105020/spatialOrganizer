@@ -67,8 +67,8 @@ session_save_path('/home/intranet/public_html/fixmystreet/admin/application/cach
 switch (ENVIRONMENT)
 {
 	case 'development':
-		error_reporting(-1);
-		ini_set('display_errors', 0);
+		error_reporting(E_ALL);
+		ini_set('display_errors', 1);
 	break;
 
 	case 'testing':

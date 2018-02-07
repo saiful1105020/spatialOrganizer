@@ -14,7 +14,6 @@ class Home extends CI_Controller {
           $this->load->helper('url');
           $this->load->helper('html');
 		  $this->load->library('form_validation');
-		  $this->load->model('admin_model');
 		  
 		  //Load necessary modules
      }
