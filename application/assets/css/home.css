@@ -1,0 +1,21 @@
+#logo{
+	text-align: center;
+	font-family: Ubuntu;
+	font-size: 2em;
+
+	padding-top: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 10px;
+}
+
+.navbar-inverse .navbar-brand {
+    color: #900f9f;
+}
+
+.nav-side {
+    margin-right: 10px;
+    margin-bottom: 5px;
+    margin-left: 20px;
+    padding-left: 50px;
+}

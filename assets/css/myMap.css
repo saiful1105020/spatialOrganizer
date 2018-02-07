@@ -1,0 +1,13 @@
+html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+#map {
+        height: 80%;
+        
+        
+      }
+ #map2{
+ 	height:450px;
+ }
