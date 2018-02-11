@@ -29,7 +29,41 @@ class User extends CI_Controller {
 	*/
 	public function saveTask()
 	{
+		$task = array();
+		$task['userId'] = $_POST['userId'];
+		$task['desc'] = $_POST['description'];
 		
+		$jsonData = array();
+		$jsonData['desc'] = $task['desc'];
+		
+		$task['date'] = $_POST['date'];
+		$task['duration'] = $_POST['duration'];
+		$task['delFrom'] = $_POST['delFrom'];
+		$task['delTo'] = $_POST['delTo'];
+		$task['delLat'] = $_POST['delLat'];
+		$task['delLong'] = $_POST['delLong'];
+		$task['pickLat'] = $_POST['pickLat'];
+		$task['pickLong'] = $_POST['pickLong'];
+		$task['status'] = $_POST['status'];
+		
+		//echo json_encode($task);
+		
+		$data=$this->user_model->saveTask($task);
+		
+		$jsonData = array();
+		
+		if($data)
+		{
+			$jsonData['status']=1;
+			$jsonData['taskId']=$data;
+		}
+		else
+		{
+			$jsonData['status']=0;
+			$jsonData['taskId']=$data;
+		}
+		
+		echo json_encode($jsonData);
 	}
 	
 	/**
@@ -65,6 +99,22 @@ class User extends CI_Controller {
 	*/
 	public function getTaskList()
 	{
+		$userId = $_POST['userId'];
+		//$userId = 5;
 		
+		
+		$response = $this->user_model->getTaskList($userId);
+		
+		echo json_encode($response);
+	}
+	
+	public function unitTest()
+	{
+		$task['delLat'] = $_GET['delLat'];
+		$task['delLong'] = $_GET['delLong'];
+		$task['pickLat'] = $_GET['pickLat'];
+		$task['pickLong'] = $_GET['pickLong'];
+		
+		$data=$this->user_model->saveTask($task);
 	}
 }
