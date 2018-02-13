@@ -26,6 +26,19 @@ class Employee extends CI_Controller {
 	
 	/**
 		Return a json object
+		-array of tasks. 
+	*/
+	public function getTaskList()
+	{
+		//$employeeId = $_POST['employeeId'];
+		$employeeId = 2;
+		
+		$response = $this->employee_model->getTaskList($employeeId);
+		
+		echo json_encode($response);
+	}
+	/**
+		Return a json object
 		-status: 0-> Failed
 				1-> Successful
 		[if status 0, ignore all]

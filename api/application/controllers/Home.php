@@ -28,18 +28,23 @@ class Home extends CI_Controller {
 	
 	public function assignFirst()
 	{
-		$date = "2018-02-12";
+		$date = date("Y-m-d");
 		$jobStartTime = '10:00:00';
+		
 		/**
 			Get all unassigned tasks on that day
 		*/
 		
 		$uTasks = $this->employee_model->getUnassignedTasks($date);
-		
+		$count=0;
 		foreach ($uTasks as $key => $row) {
 			$delivery_deadline[$key]  = $row['delivery_deadline'];
+			$count++;
 		}
-		array_multisort($delivery_deadline, SORT_ASC, $uTasks);
+		if($count>0)
+		{
+			array_multisort($delivery_deadline, SORT_ASC, $uTasks);
+		}
 		
 		/**
 			Get all worker ids and location
@@ -52,18 +57,9 @@ class Home extends CI_Controller {
 			array_push($workers,$w);
 		}
 		
-		//print_r($workers);
-		//echo '<br>----------------<br>';
-		
-		/**
-		Assign Tasks
-		task -> worker pairs
-		*/
 		$assign = array();
 		foreach($uTasks as $task)
 		{
-			//print_r($task);
-			
 			$minDelay = 99999999;
 			$bestWorker = -1;
 			$index= 0;
@@ -75,15 +71,12 @@ class Home extends CI_Controller {
 			{
 				$delay = 0;
 				$availTime = $this->sqlTimeToSeconds($w['available_time']);	
-				//print_r($temp);
-				//echo $availTime.'**<br>';
 				
 				$pickupDelay = $this->getDrivingDistance($w['lat'], $w['lon'],$temp['lat'], $temp['lon'] );
 				$taskDelay = $task['duration_mins']*60;
 				$deliveryDelay = $this->getDrivingDistance($temp['lat'], $temp['lon'],$temp2['lat'], $temp2['lon'] );
 				
 				$delay = $availTime+$pickupDelay+$taskDelay+$deliveryDelay;
-				//echo $delay.'***';
 				
 				if($minDelay>$delay)
 				{
@@ -103,8 +96,6 @@ class Home extends CI_Controller {
 			$totalSeconds = $delay;
 			$newTime = $this->secondsToSqlTime($totalSeconds);
 			
-			//echo $task['delivery_start_time'].'++<br>';
-			
 			$delStartTime = $this->sqlTimeToSeconds($task['delivery_start_time']);
 			if($newTime<$delStartTime)
 			{
@@ -115,28 +106,12 @@ class Home extends CI_Controller {
 			
 			$workers[$bestWorker]['available_time'] = $newTime;
 			
-			//print_r($workers);
-			//echo '<br>==================<br>';
+			$this->employee_model->setAssignmentStatus($workers[$bestWorker]['employee_id'],$taskId);
 			
-			/**
-			update task table
-			status = 1
-			employee_id = assign
-			*/
 		}
+		
+		echo 'Task Assignment Successful! <br>';
 		print_r($assign);
-		
-		
-		/**
-			update tasks table
-			status = 1
-			employee_id = assign
-		*/
-		
-		/**
-		update $newTaskFlag for each assigned worker
-		-- set to 1
-		*/
 	}
 	
 	public function sqlTimeToSeconds($sqlTime)
