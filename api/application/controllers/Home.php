@@ -114,6 +114,42 @@ class Home extends CI_Controller {
 		print_r($assign);
 	}
 	
+	public function assignAgain()
+	{
+		$date = date("Y-m-d");
+		
+		//Get unassigned tasks
+		$uTasks = $this->employee_model->getUnassignedTasks($date);
+		
+		$pendingList = $this->employee_model->getPendingCount($date);
+		//print_r($pendingList);
+		
+		$assign = array();
+		foreach($uTasks as $task)
+		{
+			$v = 99999999;
+			$eid = 0;
+			foreach($pendingList as $key=>$value)
+			{
+				if($value<$v)
+				{
+					$v = $value;
+					$eid = $key;
+				}
+			}
+
+			$assign[$task['task_id']] = $eid;
+			$pendingList[$eid]++;
+		}
+		
+		foreach($assign as $key=>$value)
+		{
+			$this->employee_model->setAssignmentStatus($value,$key);
+		}
+		
+		echo 'Incremental Task Assignment Successful';
+	}
+	
 	public function sqlTimeToSeconds($sqlTime)
 	{
 		$seconds = 0;

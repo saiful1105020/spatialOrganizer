@@ -30,13 +30,19 @@ class Employee extends CI_Controller {
 	*/
 	public function getTaskList()
 	{
-		//$employeeId = $_POST['employeeId'];
-		$employeeId = 2;
+		$employeeId = $_POST['employeeId'];
+		//$employeeId = 1;
 		
 		$response = $this->employee_model->getTaskList($employeeId);
 		
 		echo json_encode($response);
+		/**
+			Reset newTaskFlag
+		*/
+		$this->employee_model->resetNewTaskFlag($employeeId);
 	}
+	
+	
 	/**
 		Return a json object
 		-status: 0-> Failed
@@ -48,12 +54,12 @@ class Employee extends CI_Controller {
 	*/
 	public function verifyLogin()
 	{
-		$userName = 'Azad';
-		$password = md5('12345');
+		//$userName = 'Azad';
+		//$password = md5('12345');
 		
-		//$userName = $_POST['userName'];
+		$userName = $_POST['userName'];
 		//echo $email;
-		//$password = md5($_POST['password']);
+		$password = md5($_POST['password']);
 		//echo $password;
 		
 		$jsonData = array();

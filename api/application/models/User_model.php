@@ -91,7 +91,7 @@ class User_model extends CI_Model
  			foreach ($dbreply as $task)
 			{
 				$task['delivery_location'] = $this->getLocation($task['delivery_location_id']);
-				$task['pickup_location'] = $this->getLocation($task['delivery_location_id']);
+				$task['pickup_location'] = $this->getLocation($task['pickup_location_id']);
 				
 				array_push($tasks,$task);
 			}

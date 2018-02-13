@@ -35,10 +35,40 @@ class Employee_model extends CI_Model
 		$query = $this->db->query($sql,array($employeeId));
 		$this->db->trans_complete();
 	}
+
+	public function resetNewTaskFlag($employeeId)
+	{
+		$sql = "UPDATE `employee` SET `newTaskFlag`=0 WHERE `employee_id` = ?";
+		$query = $this->db->query($sql,$employeeId);
+	}
+	
+	public function getPendingCount($date)
+	{
+		$sql = "SELECT employee_id FROM employee";
+		$ids = $this->db->query($sql)->result_array();
+		$pending = array();
+		foreach($ids as $t)
+		{
+			$id = $t['employee_id'];
+			
+			$sql = "SELECT COUNT(*) as cnt FROM task t,
+			employee e WHERE e.employee_id=t.employee_id
+			and t.assignment_status=1 and t.date=?
+			and e.employee_id = ?";
+			
+			$query = $this->db->query($sql,array($date,$id));
+			$dbreply = $query->row_array();
+			$count = $dbreply['cnt'];
+			
+			$pending[$id] = $count;
+		}
+		return $pending;
+	}
 	
 	public function getTaskList($employeeId)
 	{
 		$date = date("Y-m-d");
+		//$date = "2018-02-12";
 		$response = array();
 		/**
 			status = 0/1
@@ -59,7 +89,7 @@ class Employee_model extends CI_Model
  			foreach ($dbreply as $task)
 			{
 				$task['delivery_location'] = $this->getLocation($task['delivery_location_id']);
-				$task['pickup_location'] = $this->getLocation($task['delivery_location_id']);
+				$task['pickup_location'] = $this->getLocation($task['pickup_location_id']);
 				
 				array_push($tasks,$task);
 			}
