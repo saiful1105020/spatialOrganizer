@@ -135,6 +135,20 @@ class Employee_model extends CI_Model
 		return $temp;
 	}
 	
+	public function setTaskComplete($taskId)
+	{
+		$sql = "UPDATE `task` SET `assignment_status`=2 WHERE `task_id` = ?";
+		$query = $this->db->query($sql,array($taskId));
+		if($query)
+		{
+			return 1;
+		}
+		else
+		{
+			return 0;
+		}
+	}
+	
 	public function getLoginInfo($userName,$password)
 	{
 		$sql='SELECT * FROM `employee` WHERE `name` = ? and `password` = ?';

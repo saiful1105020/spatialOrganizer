@@ -148,6 +148,7 @@ class Home extends CI_Controller {
 		}
 		
 		echo 'Incremental Task Assignment Successful';
+		print_r($assign);
 	}
 	
 	public function sqlTimeToSeconds($sqlTime)

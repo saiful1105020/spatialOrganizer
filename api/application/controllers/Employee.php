@@ -72,4 +72,11 @@ class Employee extends CI_Controller {
 		
 		echo json_encode($jsonData);
 	}
+	
+	public function setTaskComplete()
+	{
+		$taskId = $_POST['taskId'];
+		$jsonData['status'] = $this->employee_model->setTaskComplete($taskId);
+		echo json_encode($jsonData);
+	}
 }
